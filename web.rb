@@ -1,17 +1,8 @@
 require 'rubygems'
 require 'sinatra'
-require 'data_mapper'
 require 'json'
-
-DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/todo_list.db")
-class Item
-  include DataMapper::Resource
-  property :id, Serial
-  property :content, Text, :required => true
-  property :done, Boolean, :required => true, :default => false
-  property :created, DateTime
-end
-DataMapper.finalize.auto_upgrade!
+require 'sinatra/reloader' if development?
+require './item'
 
 get '/?' do
   @items = Item.all(:order => :created.desc)
